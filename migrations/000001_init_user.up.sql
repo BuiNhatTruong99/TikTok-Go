@@ -8,4 +8,3 @@ CREATE TABLE users (
                        created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX ON users (username);
