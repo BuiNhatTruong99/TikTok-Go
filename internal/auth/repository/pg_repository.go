@@ -29,7 +29,7 @@ func (r *authRepo) GetUserByEmail(ctx context.Context, email string) (*entity.Us
 
 	if err := r.db.Table(entity.TableName()).WithContext(ctx).Where("email = ?", email).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, entity.ErrUserNotFoundWithEmail
+			return nil, errors.New("email is not exists")
 		}
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (r *authRepo) GetUserByName(ctx context.Context, name string) (*entity.User
 
 	if err := r.db.Table(entity.TableName()).WithContext(ctx).Where("username = ?", name).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, entity.ErrUserNotFoundWithName
+			return nil, errors.New("name is not exists")
 		}
 		return nil, err
 	}

@@ -24,11 +24,15 @@ type UserRequest struct {
 	Bio          string `gorm:"column:bio" json:"bio"`
 }
 
-type UserResponse struct {
-	Username  string `gorm:"column:username" json:"username"`
-	Email     string `gorm:"column:email" json:"email"`
-	AvatarUrl string `gorm:"column:avatar_url" json:"avatar_url"`
-	Bio       string `gorm:"column:bio" json:"bio"`
+type UserLogin struct {
+	Email        string `json:"email"`
+	HashPassword string `json:"hash_password"`
+}
+
+type LoginResponse struct {
+	User         *User  `json:"user"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 func TableName() string {

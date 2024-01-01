@@ -1,6 +1,6 @@
 server:
   Port: :8080
-  TokenSymmetricKey: 28f8599e587f46ef00232c626222b99b
+  TokenSecretKey: 28f8599e587f46ef00232c626222b99b
   AccessTokenDuration: 15m
   RefreshTokenDuration: 24h
 

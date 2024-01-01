@@ -13,7 +13,7 @@ type Config struct {
 
 type ServerConfig struct {
 	Port                 string
-	TokenSymmetricKey    string
+	TokenSecretKey       string
 	AccessTokenDuration  time.Duration
 	RefreshTokenDuration time.Duration
 }

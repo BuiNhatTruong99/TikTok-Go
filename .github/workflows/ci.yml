@@ -18,7 +18,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_USER: root
-          POSTGRES_PASSWORD: 2804
+          POSTGRES_PASSWORD: secret
           POSTGRES_DB: tiktok
         ports:
           - 5432:5432
