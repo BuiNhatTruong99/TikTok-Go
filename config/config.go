@@ -13,7 +13,7 @@ type Config struct {
 
 type ServerConfig struct {
 	Port                 string
-	TokenSecretKey       string
+	JwtSecretKey         string
 	AccessTokenDuration  time.Duration
 	RefreshTokenDuration time.Duration
 }

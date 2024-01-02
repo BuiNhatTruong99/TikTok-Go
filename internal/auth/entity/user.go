@@ -3,6 +3,7 @@ package entity
 import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 	"time"
 )
 
@@ -49,4 +50,37 @@ func HashPassword(password string) (string, error) {
 
 func ComparePassword(password, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
+
+func (u *UserRequest) Validate() error {
+	u.Username = strings.TrimSpace(u.Username)
+	u.Email = strings.TrimSpace(u.Email)
+	u.HashPassword = strings.TrimSpace(u.HashPassword)
+
+	if err := validateName(u.Username); err != nil {
+		return err
+	}
+
+	if err := validatePassword(u.HashPassword); err != nil {
+		return err
+	}
+
+	if err := validateEmail(u.Email); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserLogin) Validate() error {
+	u.Email = strings.TrimSpace(u.Email)
+	u.HashPassword = strings.TrimSpace(u.HashPassword)
+
+	if err := validatePassword(u.HashPassword); err != nil {
+		return err
+	}
+
+	if err := validateEmail(u.Email); err != nil {
+		return err
+	}
+	return nil
 }

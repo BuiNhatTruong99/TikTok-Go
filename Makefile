@@ -18,9 +18,12 @@ migrateup:
 migratedown:
 	migrate -path migrations -database "$(DB_URL)" -verbose down
 
+mock:
+	mockgen --build_flags=--mod=mod -destination internal/auth/mock/pg_mock.go -source internal/**/interface.go
+
 test:
 	go test -v -cover -short ./...
 
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc mock test
 

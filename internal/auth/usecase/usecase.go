@@ -11,21 +11,31 @@ import (
 
 type authUC struct {
 	auRepository auth.Repository
+	config       *config.Config
 }
 
-func NewAuthUsecase(auRepository auth.Repository) auth.Usecase {
-	return &authUC{auRepository: auRepository}
+func NewAuthUsecase(auRepository auth.Repository, config *config.Config) auth.Usecase {
+	return &authUC{auRepository: auRepository, config: config}
 }
 
-func (u *authUC) Register(ctx context.Context, user *entity.UserRequest) error {
-	existsUserWithEmail, err := u.auRepository.GetUserByEmail(ctx, user.Email)
-	if existsUserWithEmail != nil || err == nil {
+func (u *authUC) checkExistingUser(ctx context.Context, email, username string) error {
+	if _, err := u.auRepository.GetUserByEmail(ctx, email); err == nil {
 		return errors.New("email already exists")
 	}
 
-	existsUserWithUsername, err := u.auRepository.GetUserByEmail(ctx, user.Username)
-	if existsUserWithUsername != nil || err == nil {
+	if _, err := u.auRepository.GetUserByName(ctx, username); err == nil {
 		return errors.New("username already exists")
+	}
+
+	return nil
+}
+
+func (u *authUC) Register(ctx context.Context, user *entity.UserRequest) error {
+	if err := user.Validate(); err != nil {
+		return err
+	}
+	if err := u.checkExistingUser(ctx, user.Email, user.Username); err != nil {
+		return err
 	}
 
 	hashPassword, err := entity.HashPassword(user.HashPassword)
@@ -37,7 +47,10 @@ func (u *authUC) Register(ctx context.Context, user *entity.UserRequest) error {
 	return u.auRepository.Register(ctx, user)
 }
 
-func (u *authUC) Login(ctx context.Context, data *entity.UserLogin, config *config.Config) (*entity.LoginResponse, error) {
+func (u *authUC) Login(ctx context.Context, data *entity.UserLogin) (*entity.LoginResponse, error) {
+	if err := data.Validate(); err != nil {
+		return nil, err
+	}
 	findUser, err := u.auRepository.GetUserByEmail(ctx, data.Email)
 	if err != nil {
 		return nil, err
@@ -47,12 +60,12 @@ func (u *authUC) Login(ctx context.Context, data *entity.UserLogin, config *conf
 		return nil, errors.New("email or Password incorrect")
 	}
 
-	accessToken, err := jwt.GenerateToken(findUser.Email, config.Server.AccessTokenDuration, config)
+	accessToken, err := jwt.GenerateToken(findUser.Email, u.config.Server.AccessTokenDuration, u.config)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err := jwt.GenerateToken(findUser.Email, config.Server.RefreshTokenDuration, config)
+	refreshToken, err := jwt.GenerateToken(findUser.Email, u.config.Server.RefreshTokenDuration, u.config)
 	if err != nil {
 		return nil, err
 	}

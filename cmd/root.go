@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/BuiNhatTruong99/TikTok-Go/config"
-	"github.com/BuiNhatTruong99/TikTok-Go/pkg/postgresql"
+	"github.com/BuiNhatTruong99/TikTok-Go/pkg/db/postgresql"
 	"log"
 )
 

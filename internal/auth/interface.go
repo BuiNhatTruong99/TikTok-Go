@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"github.com/BuiNhatTruong99/TikTok-Go/config"
 	"github.com/BuiNhatTruong99/TikTok-Go/internal/auth/entity"
 )
 
@@ -14,5 +13,5 @@ type Repository interface {
 
 type Usecase interface {
 	Register(ctx context.Context, user *entity.UserRequest) error
-	Login(ctx context.Context, data *entity.UserLogin, config *config.Config) (*entity.LoginResponse, error)
+	Login(ctx context.Context, data *entity.UserLogin) (*entity.LoginResponse, error)
 }

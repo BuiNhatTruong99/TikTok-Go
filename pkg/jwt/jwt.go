@@ -15,7 +15,7 @@ func GenerateToken(email string, duration time.Duration, config *config.Config) 
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(config.Server.TokenSecretKey)
+	tokenString, err := token.SignedString(config.Server.JwtSecretKey)
 	if err != nil {
 		return "", fmt.Errorf("error when Singed token: %v", err)
 	}
@@ -25,7 +25,7 @@ func GenerateToken(email string, duration time.Duration, config *config.Config) 
 
 func VerifyToken(tokenString string, config *config.Config) error {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return config.Server.TokenSecretKey, nil
+		return config.Server.JwtSecretKey, nil
 	})
 	if err != nil {
 		return fmt.Errorf("error pasre token: %v", err)
