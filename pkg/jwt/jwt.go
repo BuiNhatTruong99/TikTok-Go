@@ -15,7 +15,7 @@ func GenerateToken(email string, duration time.Duration, config *config.Config) 
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(config.Server.JwtSecretKey)
+	tokenString, err := token.SignedString([]byte(config.Server.JwtSecretKey))
 	if err != nil {
 		return "", fmt.Errorf("error when Singed token: %v", err)
 	}

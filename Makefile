@@ -24,6 +24,9 @@ mock:
 test:
 	go test -v -cover -short ./...
 
+run:
+	go run main.go
+
 
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc mock test
 

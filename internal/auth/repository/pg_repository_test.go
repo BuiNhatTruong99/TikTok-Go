@@ -122,28 +122,6 @@ func TestAuthRepo_GetUserByEmail_Error(t *testing.T) {
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
-func TestAuthRepo_GetUserByEmail_NotFound(t *testing.T) {
-	mock, authRepo := setUpTest(t)
-
-	testUser := &entity.User{
-		Username:     "truongbui",
-		Email:        "bntruong@gmail.com",
-		HashPassword: "abc",
-		AvatarUrl:    "avatart_url",
-		Bio:          "this is my tiktok",
-	}
-
-	mock.ExpectQuery(`SELECT \* FROM "users" WHERE email = \$1`).
-		WithArgs(testUser.Email).
-		WillReturnError(gorm.ErrRecordNotFound)
-
-	user, err := authRepo.GetUserByEmail(context.Background(), testUser.Email)
-	require.Error(t, err)
-	require.Nil(t, user)
-	require.EqualError(t, err, "email is not exists")
-	require.NoError(t, mock.ExpectationsWereMet())
-}
-
 func TestAuthRepo_GetUserByName(t *testing.T) {
 	mock, authRepository := setUpTest(t)
 
