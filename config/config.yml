@@ -1,0 +1,14 @@
+server:
+  Port: :8080
+  JwtSecretKey: "28f8599e587f46ef00232c626222b99b"
+  AccessTokenDuration: 15m
+  RefreshTokenDuration: 24h
+
+postgres:
+  PostgresqlHost: localhost
+  PostgresqlPort: 5432
+  PostgresqlUser: root
+  PostgresqlPassword: secret
+  PostgresqlDbname: tiktok
+  PostgresqlSslmode: disable
+  PgDriver: postgresql

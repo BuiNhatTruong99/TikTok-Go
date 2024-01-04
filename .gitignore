@@ -1,0 +1,8 @@
+
+# IDE
+.idea
+.vscode
+
+# Config
+.env
+/config/config-prod.yml
