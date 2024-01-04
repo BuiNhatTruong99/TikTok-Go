@@ -2,6 +2,7 @@ package entity
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
@@ -31,9 +32,12 @@ type UserLogin struct {
 }
 
 type LoginResponse struct {
-	User         *User  `json:"user"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	SessionID             uuid.UUID `json:"session_id"`
+	User                  *User     `json:"user"`
+	AccessToken           string    `json:"access_token"`
+	AccessTokenExpiredAt  time.Time `json:"access_token_expired_at"`
+	RefreshToken          string    `json:"refresh_token"`
+	RefreshTokenExpiredAt time.Time `json:"refresh_token_expired_at"`
 }
 
 func TableName() string {

@@ -25,11 +25,15 @@ func Execute() {
 	v1 := router.Group("/v1")
 	SetupRoutes(v1, psqlDB, cfg)
 
-	router.Run(cfg.Server.Port)
+	err = router.Run(cfg.Server.Port)
+	if err != nil {
+		return
+	}
 }
 
 func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	authAPIService := composer.ComposeAuthAPIService(db, cfg)
+	sessionAPIService := composer.ComposeSessionAPIService(db, cfg)
 
 	auth := router.Group("/auth")
 	{
@@ -37,4 +41,6 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 		auth.POST("/login", authAPIService.Login())
 
 	}
+
+	router.POST("/tokens/new-access-token", sessionAPIService.ReGenerateAccessToKen())
 }

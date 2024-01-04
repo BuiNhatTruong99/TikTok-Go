@@ -49,19 +49,22 @@ func (u *authUC) Login(ctx context.Context, data *entity.UserLogin) (*entity.Log
 		return nil, errors.New("email or password incorrect")
 	}
 
-	accessToken, err := jwt.GenerateToken(findUser.Email, u.config.Server.AccessTokenDuration, u.config)
+	accessToken, accessPayload, err := jwt.GenerateToken(findUser.ID, u.config.Server.AccessTokenDuration, u.config)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err := jwt.GenerateToken(findUser.Email, u.config.Server.RefreshTokenDuration, u.config)
+	refreshToken, refreshPayload, err := jwt.GenerateToken(findUser.ID, u.config.Server.RefreshTokenDuration, u.config)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.LoginResponse{
-		User:         findUser,
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+		SessionID:             refreshPayload.ID,
+		User:                  findUser,
+		AccessToken:           accessToken,
+		AccessTokenExpiredAt:  accessPayload.ExpiresAt,
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiredAt: refreshPayload.ExpiresAt,
 	}, nil
 }

@@ -9,8 +9,8 @@ createdb:
 dropdb:
 	docker exec -it postgres16 dropdb tiktok
 
-migrate-user:
-	migrate create -ext sql -dir migrations -seq init_user
+new-migration:
+	migrate create -ext sql -dir migrations -seq $(name)
 
 migrateup:
 	migrate -path migrations -database "$(DB_URL)" -verbose up
