@@ -20,6 +20,7 @@ func RequireAuth(cfg *config.Config) func(ctx *gin.Context) {
 		token, err := extractTokenFromHeaderString(ctx.GetHeader("Authorization"))
 		if err != nil {
 			ctx.JSON(http.StatusUnauthorized, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.Abort()
 			return
 		}
 
