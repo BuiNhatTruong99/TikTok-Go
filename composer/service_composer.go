@@ -47,10 +47,10 @@ func ComposeSessionAPIService(db *gorm.DB, cfg *config.Config) SessionService {
 	return sessionAPIController
 }
 
-func ComposePostAPIService(db *gorm.DB) PostService {
+func ComposePostAPIService(db *gorm.DB, cfg *config.Config) PostService {
 	postRepo := postPGRepository.NewPostRepository(db)
 	postUC := postPGUsecase.NewPostUsecase(postRepo)
-	postAPIController := postController.NewPostController(postUC)
+	postAPIController := postController.NewPostController(postUC, cfg)
 
 	return postAPIController
 }

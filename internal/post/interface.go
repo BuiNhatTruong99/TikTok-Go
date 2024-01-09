@@ -15,4 +15,5 @@ type Repository interface {
 type UseCase interface {
 	CreatePost(ctx context.Context, request *entity.PostRequest) error
 	DeletePost(ctx context.Context, postID int64) error
+	GetPostByID(ctx context.Context, postID int64) (*entity.Post, error)
 }

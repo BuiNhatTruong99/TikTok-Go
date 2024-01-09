@@ -11,9 +11,9 @@ type Post struct {
 }
 
 type PostRequest struct {
-	UserID   int64  `json:"user_id" gorm:"column:user_id"`
-	VideoUrl string `json:"video_url" gorm:"column:video_url"`
-	Caption  string `json:"caption" gorm:"column:caption"`
+	UserID   int64  `json:"user_id" gorm:"column:user_id" form:"user_id"`
+	VideoUrl string `json:"video_url" gorm:"column:video_url" form:"video_url"`
+	Caption  string `json:"caption" gorm:"column:caption" form:"caption"`
 }
 
 func TableName() string {

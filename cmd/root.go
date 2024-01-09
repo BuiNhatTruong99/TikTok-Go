@@ -35,7 +35,7 @@ func Execute() {
 func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	authAPIService := composer.ComposeAuthAPIService(db, cfg)
 	sessionAPIService := composer.ComposeSessionAPIService(db, cfg)
-	postAPIService := composer.ComposePostAPIService(db)
+	postAPIService := composer.ComposePostAPIService(db, cfg)
 
 	auth := router.Group("/auth")
 	{
@@ -48,7 +48,7 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 
 	post := router.Group("/post").Use(middleware.RequireAuth(cfg))
 	{
-		post.POST("/create", postAPIService.CreatePost())
+		post.POST("/create", middleware.FileUploadMiddleware(), postAPIService.CreatePost())
 		post.DELETE("/:post-id", postAPIService.DeletePost())
 
 	}

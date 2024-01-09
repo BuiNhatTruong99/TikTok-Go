@@ -12,3 +12,9 @@ postgres:
   PostgresqlDbname: tiktok
   PostgresqlSslmode: disable
   PgDriver: postgresql
+
+cloudinary:
+  CloudName:
+  CloudAPIKey:
+  CloudAPISecretKey:
+  CloudUploadFolder:

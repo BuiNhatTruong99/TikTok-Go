@@ -19,9 +19,9 @@ func (p *postUC) CreatePost(ctx context.Context, request *entity.PostRequest) er
 }
 
 func (p *postUC) DeletePost(ctx context.Context, postID int64) error {
-	_, err := p.postRepository.GetPostByID(ctx, postID)
-	if err != nil {
-		return err
-	}
 	return p.postRepository.DeletePostByID(ctx, postID)
+}
+
+func (p *postUC) GetPostByID(ctx context.Context, postID int64) (*entity.Post, error) {
+	return p.postRepository.GetPostByID(ctx, postID)
 }

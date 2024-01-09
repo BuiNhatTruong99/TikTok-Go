@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig
-	Postgres PosgresConfig
+	Server     ServerConfig
+	Postgres   PosgresConfig
+	Cloudinary Cloudinary
 }
 
 type ServerConfig struct {
@@ -28,9 +29,16 @@ type PosgresConfig struct {
 	PgDriver           string
 }
 
+type Cloudinary struct {
+	CloudName         string
+	CloudAPIKey       string
+	CloudAPISecretKey string
+	CloudUploadFolder string
+}
+
 func LoadConfig(path string) (*Config, error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("config")
+	viper.SetConfigName("config-prod")
 	viper.SetConfigType("yaml")
 
 	viper.AutomaticEnv()
