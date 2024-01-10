@@ -41,12 +41,12 @@ CREATE INDEX ON likes (user_id);
 
 CREATE INDEX ON likes (post_id);
 
-ALTER TABLE posts ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE posts ADD FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
 
-ALTER TABLE comments ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE comments ADD FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
 
-ALTER TABLE comments ADD FOREIGN KEY (post_id) REFERENCES posts (id);
+ALTER TABLE comments ADD FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE;
 
-ALTER TABLE likes ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE likes ADD FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
 
-ALTER TABLE likes ADD FOREIGN KEY (post_id) REFERENCES posts (id);
+ALTER TABLE likes ADD FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE;

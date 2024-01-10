@@ -53,14 +53,27 @@ func VerifyToken(tokenString string, config *config.Config) (*Payload, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	exp, ok := mapClaims["expiresAt"].(float64)
+	if !ok {
+		return nil, errors.New("expiration claim not found in token")
+	}
+
+	expirationTime := time.Unix(int64(exp), 0)
+
+	if time.Now().After(expirationTime) {
+		return nil, errors.New("token has expired")
+	}
+
 	payloadID, err := uuid.Parse(mapClaims["payload_id"].(string))
 	if err != nil {
 		return nil, err
 	}
+
 	payload := &Payload{
 		ID:        payloadID,
 		UserID:    int64(mapClaims["user_id"].(float64)),
-		ExpiresAt: time.Unix(int64(mapClaims["expiresAt"].(float64)), 0),
+		ExpiresAt: time.Unix(int64(exp), 0),
 	}
 
 	return payload, nil

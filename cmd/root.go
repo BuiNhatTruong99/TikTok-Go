@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/BuiNhatTruong99/TikTok-Go/composer"
 	"github.com/BuiNhatTruong99/TikTok-Go/config"
+	"github.com/BuiNhatTruong99/TikTok-Go/middleware"
 	"github.com/BuiNhatTruong99/TikTok-Go/pkg/db/postgresql"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -34,6 +35,7 @@ func Execute() {
 func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	authAPIService := composer.ComposeAuthAPIService(db, cfg)
 	sessionAPIService := composer.ComposeSessionAPIService(db, cfg)
+	postAPIService := composer.ComposePostAPIService(db, cfg)
 
 	auth := router.Group("/auth")
 	{
@@ -43,4 +45,11 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	}
 
 	router.POST("/tokens/new-access-token", sessionAPIService.ReGenerateAccessToKen())
+	router.GET("/post", postAPIService.GetAllPosts())
+	post := router.Group("/post").Use(middleware.RequireAuth(cfg))
+	{
+		post.GET("/:user-id", postAPIService.GetPostsByUserID())
+		post.POST("/create", middleware.FileUploadMiddleware(), postAPIService.CreatePost())
+		post.DELETE("/:post-id", postAPIService.DeletePost())
+	}
 }

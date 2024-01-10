@@ -5,6 +5,9 @@ import (
 	authController "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/controller"
 	authPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/repository"
 	authPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/usecase"
+	postController "github.com/BuiNhatTruong99/TikTok-Go/internal/post/controller"
+	postPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/post/repository"
+	postPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/post/usecase"
 	sessionController "github.com/BuiNhatTruong99/TikTok-Go/internal/session/controller"
 	sessionPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/session/repository"
 	sessionPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/session/usecase"
@@ -21,20 +24,35 @@ type SessionService interface {
 	ReGenerateAccessToKen() func(ctx *gin.Context)
 }
 
+type PostService interface {
+	CreatePost() func(ctx *gin.Context)
+	GetPostsByUserID() func(ctx *gin.Context)
+	GetAllPosts() func(ctx *gin.Context)
+	DeletePost() func(ctx *gin.Context)
+}
+
 func ComposeAuthAPIService(db *gorm.DB, cfg *config.Config) AuthService {
 	authRepo := authPGRepository.NewAuthRepository(db)
 	authUC := authPGUsecase.NewAuthUsecase(authRepo, cfg)
 	sessionRepo := sessionPGRepository.NewSessionRepository(db)
 	sessionUC := sessionPGUsecase.NewSessionUsecase(sessionRepo)
-	authController := authController.NewAuthController(authUC, sessionUC, cfg)
+	authAPIController := authController.NewAuthController(authUC, sessionUC, cfg)
 
-	return authController
+	return authAPIController
 }
 
 func ComposeSessionAPIService(db *gorm.DB, cfg *config.Config) SessionService {
 	sessionRepo := sessionPGRepository.NewSessionRepository(db)
 	sessionUC := sessionPGUsecase.NewSessionUsecase(sessionRepo)
-	sessionController := sessionController.NewSessionController(sessionUC, cfg)
+	sessionAPIController := sessionController.NewSessionController(sessionUC, cfg)
 
-	return sessionController
+	return sessionAPIController
+}
+
+func ComposePostAPIService(db *gorm.DB, cfg *config.Config) PostService {
+	postRepo := postPGRepository.NewPostRepository(db)
+	postUC := postPGUsecase.NewPostUsecase(postRepo)
+	postAPIController := postController.NewPostController(postUC, cfg)
+
+	return postAPIController
 }
