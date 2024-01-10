@@ -26,6 +26,8 @@ type SessionService interface {
 
 type PostService interface {
 	CreatePost() func(ctx *gin.Context)
+	GetPostsByUserID() func(ctx *gin.Context)
+	GetAllPosts() func(ctx *gin.Context)
 	DeletePost() func(ctx *gin.Context)
 }
 

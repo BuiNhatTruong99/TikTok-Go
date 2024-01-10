@@ -45,11 +45,11 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	}
 
 	router.POST("/tokens/new-access-token", sessionAPIService.ReGenerateAccessToKen())
-
+	router.GET("/post", postAPIService.GetAllPosts())
 	post := router.Group("/post").Use(middleware.RequireAuth(cfg))
 	{
+		post.GET("/:user-id", postAPIService.GetPostsByUserID())
 		post.POST("/create", middleware.FileUploadMiddleware(), postAPIService.CreatePost())
 		post.DELETE("/:post-id", postAPIService.DeletePost())
-
 	}
 }

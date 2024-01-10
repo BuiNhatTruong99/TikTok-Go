@@ -25,3 +25,11 @@ func (p *postUC) DeletePost(ctx context.Context, postID int64) error {
 func (p *postUC) GetPostByID(ctx context.Context, postID int64) (*entity.Post, error) {
 	return p.postRepository.GetPostByID(ctx, postID)
 }
+
+func (p *postUC) GetPostsByUserID(ctx context.Context, userID int64) ([]entity.Post, error) {
+	return p.postRepository.GetPostByUserID(ctx, userID)
+}
+
+func (p *postUC) GetAllPost(ctx context.Context) ([]entity.Post, error) {
+	return p.postRepository.GetAllPosts(ctx)
+}

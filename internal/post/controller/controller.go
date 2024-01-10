@@ -57,6 +57,36 @@ func (p *postController) CreatePost() func(ctx *gin.Context) {
 	}
 }
 
+func (p *postController) GetAllPosts() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		posts, err := p.postUC.GetAllPost(ctx)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, posts)
+	}
+}
+
+func (p *postController) GetPostsByUserID() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		userID, err := strconv.Atoi(ctx.Param("user-id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			return
+		}
+
+		posts, err := p.postUC.GetPostsByUserID(ctx, int64(userID))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, posts)
+	}
+}
+
 func (p *postController) DeletePost() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		postID, err := strconv.Atoi(ctx.Param("post-id"))

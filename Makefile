@@ -28,5 +28,5 @@ run:
 	go run main.go
 
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc mock test
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc mock test run
 

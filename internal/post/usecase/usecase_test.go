@@ -167,3 +167,70 @@ func TestPostUC_GetPostByID(t *testing.T) {
 		})
 	}
 }
+
+func TestPostUC_GetPostsByUserID(t *testing.T) {
+	userID := utils.RandomInt(1, 5)
+	postsList := []entity.Post{}
+	for i := 0; i < 5; i++ {
+		post := entity.Post{
+			ID:        utils.RandomInt(1, 5),
+			UserID:    userID,
+			VideoUrl:  utils.RandomString(6),
+			Caption:   utils.RandomString(20),
+			CreatedAt: nil,
+		}
+		postsList = append(postsList, post)
+	}
+	testCase := []struct {
+		name       string
+		userID     int64
+		buildStubs func(repo *mock_post.MockRepository)
+		err        error
+	}{
+		{
+			name:   "OK",
+			userID: userID,
+			buildStubs: func(repo *mock_post.MockRepository) {
+				repo.EXPECT().GetPostByUserID(gomock.Any(), gomock.Eq(userID)).Times(1).Return(postsList, nil)
+			},
+			err: nil,
+		},
+		{
+			name:   "InternalError",
+			userID: userID,
+			buildStubs: func(repo *mock_post.MockRepository) {
+				repo.EXPECT().GetPostByUserID(gomock.Any(), gomock.Eq(userID)).Times(1).Return(nil, sql.ErrConnDone)
+			},
+			err: errors.New("sql: connection is already closed"),
+		},
+		{
+			name:   "PostNotFound",
+			userID: userID,
+			buildStubs: func(repo *mock_post.MockRepository) {
+				repo.EXPECT().GetPostByUserID(gomock.Any(), gomock.Eq(userID)).Times(1).Return(nil, sql.ErrNoRows)
+			},
+			err: errors.New("sql: no rows in result set"),
+		},
+	}
+	for i := range testCase {
+		tc := testCase[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockPostRepo := mock_post.NewMockRepository(ctrl)
+			postUC := NewPostUsecase(mockPostRepo)
+			tc.buildStubs(mockPostRepo)
+			postResult, err := postUC.GetPostsByUserID(context.Background(), tc.userID)
+			require.Equal(t, tc.err, err)
+
+			if tc.err == nil {
+				require.NotNil(t, postResult)
+				for i := 0; i < len(postResult); i++ {
+					require.Equal(t, postResult[i].UserID, userID)
+				}
+			}
+		})
+	}
+}

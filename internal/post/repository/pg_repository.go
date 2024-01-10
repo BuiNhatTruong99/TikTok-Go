@@ -38,7 +38,7 @@ func (p *postRepo) GetPostByID(ctx context.Context, postID int64) (*entity.Post,
 func (p *postRepo) GetPostByUserID(ctx context.Context, userID int64) ([]entity.Post, error) {
 	var posts []entity.Post
 	if err := p.db.Table(entity.TableName()).WithContext(ctx).Where("user_id = ?",
-		userID).First(&posts).Error; err != nil {
+		userID).Find(&posts).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("no post has found")
 		}
@@ -53,4 +53,15 @@ func (p *postRepo) DeletePostByID(ctx context.Context, postID int64) error {
 		return err
 	}
 	return nil
+}
+
+func (p *postRepo) GetAllPosts(ctx context.Context) ([]entity.Post, error) {
+	var posts []entity.Post
+	if err := p.db.Table(entity.TableName()).WithContext(ctx).Find(&posts).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("no post has found")
+		}
+		return nil, err
+	}
+	return posts, nil
 }
