@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func UploadToCloudinary(file multipart.File, cfg *config.Config) (string, error) {
+func UploadToCloudinary(file multipart.File, cfg *config.Config, folder string) (string, error) {
 	ctx := context.Background()
 	cld, err := config.SetupCloudinary(cfg)
 	if err != nil {
@@ -16,7 +16,7 @@ func UploadToCloudinary(file multipart.File, cfg *config.Config) (string, error)
 	}
 
 	uploadParams := uploader.UploadParams{
-		Folder: cfg.Cloudinary.CloudUploadFolder,
+		Folder: folder,
 	}
 
 	result, err := cld.Upload.Upload(ctx, file, uploadParams)
@@ -28,7 +28,7 @@ func UploadToCloudinary(file multipart.File, cfg *config.Config) (string, error)
 	return videoUrl, nil
 }
 
-func RemoveFromCloudinary(videoURL string, cfg *config.Config) (string, error) {
+func RemoveFromCloudinary(videoURL string, cfg *config.Config, folder string) (string, error) {
 	ctx := context.Background()
 	cld, err := config.SetupCloudinary(cfg)
 	if err != nil {
@@ -39,7 +39,7 @@ func RemoveFromCloudinary(videoURL string, cfg *config.Config) (string, error) {
 	publicID := strings.TrimSuffix(parts[len(parts)-1], ".mp4")
 
 	resp, err := cld.Upload.Destroy(ctx, uploader.DestroyParams{
-		PublicID:     cfg.Cloudinary.CloudUploadFolder + "/" + publicID,
+		PublicID:     folder + "/" + publicID,
 		ResourceType: "video",
 	})
 	if err != nil {

@@ -19,7 +19,7 @@ migratedown:
 	migrate -path migrations -database "$(DB_URL)" -verbose down
 
 mock:
-	mockgen --build_flags=--mod=mod -destination internal/post/mock/pg_mock.go -source internal/post/interface.go
+	mockgen --build_flags=--mod=mod -destination internal/user/mock/pg_mock.go -source internal/user/interface.go
 
 test:
 	go test -v -cover -short ./...
