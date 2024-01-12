@@ -14,4 +14,5 @@ type Repository interface {
 type UseCase interface {
 	ChangeAvatar(ctx context.Context, userID int64, request *entity.AvatarRequest) error
 	UpdateProfile(ctx context.Context, userID int64, request *entity.ProfileRequest) error
+	GetUserByID(ctx context.Context, userID int64) (*entity.User, error)
 }

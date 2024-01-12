@@ -34,3 +34,7 @@ func (u *userUC) UpdateProfile(ctx context.Context, userID int64, request *entit
 
 	return u.userRepo.UpdateProfileUser(ctx, userID, request)
 }
+
+func (u *userUC) GetUserByID(ctx context.Context, userID int64) (*entity.User, error) {
+	return u.userRepo.GetUserByID(ctx, userID)
+}
