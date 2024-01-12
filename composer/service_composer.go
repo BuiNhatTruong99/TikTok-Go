@@ -11,6 +11,9 @@ import (
 	sessionController "github.com/BuiNhatTruong99/TikTok-Go/internal/session/controller"
 	sessionPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/session/repository"
 	sessionPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/session/usecase"
+	UserController "github.com/BuiNhatTruong99/TikTok-Go/internal/user/controller"
+	UserRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/user/repository"
+	UserUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/user/usecase"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -29,6 +32,11 @@ type PostService interface {
 	GetPostsByUserID() func(ctx *gin.Context)
 	GetAllPosts() func(ctx *gin.Context)
 	DeletePost() func(ctx *gin.Context)
+}
+
+type UserService interface {
+	ChangeAvatar() func(ctx *gin.Context)
+	UpdateProfile() func(ctx *gin.Context)
 }
 
 func ComposeAuthAPIService(db *gorm.DB, cfg *config.Config) AuthService {
@@ -55,4 +63,12 @@ func ComposePostAPIService(db *gorm.DB, cfg *config.Config) PostService {
 	postAPIController := postController.NewPostController(postUC, cfg)
 
 	return postAPIController
+}
+
+func ComposeUserAPIService(db *gorm.DB, cfg *config.Config) UserService {
+	userRepo := UserRepository.NewUserRepo(db)
+	userUC := UserUsecase.NewUserUseCase(userRepo)
+	userAPIController := UserController.NewUserController(userUC, cfg)
+
+	return userAPIController
 }

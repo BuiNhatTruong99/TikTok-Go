@@ -36,6 +36,7 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	authAPIService := composer.ComposeAuthAPIService(db, cfg)
 	sessionAPIService := composer.ComposeSessionAPIService(db, cfg)
 	postAPIService := composer.ComposePostAPIService(db, cfg)
+	userAPIService := composer.ComposeUserAPIService(db, cfg)
 
 	auth := router.Group("/auth")
 	{
@@ -45,11 +46,18 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	}
 
 	router.POST("/tokens/new-access-token", sessionAPIService.ReGenerateAccessToKen())
+
 	router.GET("/post", postAPIService.GetAllPosts())
 	post := router.Group("/post").Use(middleware.RequireAuth(cfg))
 	{
 		post.GET("/:user-id", postAPIService.GetPostsByUserID())
 		post.POST("/create", middleware.FileUploadMiddleware(), postAPIService.CreatePost())
 		post.DELETE("/:post-id", postAPIService.DeletePost())
+	}
+
+	user := router.Group("/user").Use(middleware.RequireAuth(cfg))
+	{
+		user.PUT("/:user-id/change-avatar", middleware.FileUploadMiddleware(), userAPIService.ChangeAvatar())
+		user.PUT("/:user-id/update-profile", userAPIService.UpdateProfile())
 	}
 }

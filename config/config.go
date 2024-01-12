@@ -30,10 +30,11 @@ type PosgresConfig struct {
 }
 
 type Cloudinary struct {
-	CloudName         string
-	CloudAPIKey       string
-	CloudAPISecretKey string
-	CloudUploadFolder string
+	CloudName               string
+	CloudAPIKey             string
+	CloudAPISecretKey       string
+	CloudUploadFolderVideo  string
+	CloudUploadFolderAvatar string
 }
 
 func LoadConfig(path string) (*Config, error) {

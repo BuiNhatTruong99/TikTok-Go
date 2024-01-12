@@ -1,5 +1,10 @@
+# Dependency directories (remove the comment below to include it)
+# vendor/
+/.idea/
+
 
 # IDE
+.DS_STORE
 .idea
 *.iml
 .vscode

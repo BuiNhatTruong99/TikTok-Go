@@ -40,7 +40,7 @@ func (p *postController) CreatePost() func(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
-		videoUrl, err := utils.UploadToCloudinary(file.(multipart.File), p.cfg)
+		videoUrl, err := utils.UploadToCloudinary(file.(multipart.File), p.cfg, p.cfg.Cloudinary.CloudUploadFolderVideo)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
@@ -101,7 +101,7 @@ func (p *postController) DeletePost() func(ctx *gin.Context) {
 			return
 		}
 
-		res, err := utils.RemoveFromCloudinary(post.VideoUrl, p.cfg)
+		res, err := utils.RemoveFromCloudinary(post.VideoUrl, p.cfg, p.cfg.Cloudinary.CloudUploadFolderVideo)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
