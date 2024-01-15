@@ -5,15 +5,18 @@ import (
 	authController "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/controller"
 	authPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/repository"
 	authPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/usecase"
+	likeController "github.com/BuiNhatTruong99/TikTok-Go/internal/like/controller"
+	likeRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/like/repository"
+	likeUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/like/usecase"
 	postController "github.com/BuiNhatTruong99/TikTok-Go/internal/post/controller"
 	postPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/post/repository"
 	postPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/post/usecase"
 	sessionController "github.com/BuiNhatTruong99/TikTok-Go/internal/session/controller"
 	sessionPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/session/repository"
 	sessionPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/session/usecase"
-	UserController "github.com/BuiNhatTruong99/TikTok-Go/internal/user/controller"
-	UserRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/user/repository"
-	UserUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/user/usecase"
+	userController "github.com/BuiNhatTruong99/TikTok-Go/internal/user/controller"
+	userRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/user/repository"
+	userUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/user/usecase"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -37,6 +40,11 @@ type PostService interface {
 type UserService interface {
 	ChangeAvatar() func(ctx *gin.Context)
 	UpdateProfile() func(ctx *gin.Context)
+}
+
+type LikeService interface {
+	LikePost() func(ctx *gin.Context)
+	UndoLikePost() func(ctx *gin.Context)
 }
 
 func ComposeAuthAPIService(db *gorm.DB, cfg *config.Config) AuthService {
@@ -66,9 +74,17 @@ func ComposePostAPIService(db *gorm.DB, cfg *config.Config) PostService {
 }
 
 func ComposeUserAPIService(db *gorm.DB, cfg *config.Config) UserService {
-	userRepo := UserRepository.NewUserRepo(db)
-	userUC := UserUsecase.NewUserUseCase(userRepo)
-	userAPIController := UserController.NewUserController(userUC, cfg)
+	userRepo := userRepository.NewUserRepo(db)
+	userUC := userUsecase.NewUserUseCase(userRepo)
+	userAPIController := userController.NewUserController(userUC, cfg)
 
 	return userAPIController
+}
+
+func ComposeLikeAPIService(db *gorm.DB) LikeService {
+	likeRepo := likeRepository.NewLikeRepository(db)
+	userRepo := userRepository.NewUserRepo(db)
+	likeUC := likeUsecase.NewLikeUsecase(likeRepo, userRepo)
+	likeAPIService := likeController.NewLikeController(likeUC)
+	return likeAPIService
 }
