@@ -30,7 +30,7 @@ func (uc *userController) ChangeAvatar() func(ctx *gin.Context) {
 		}
 
 		if _, err := uc.userUC.GetUserByID(ctx, int64(userID)); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -49,7 +49,7 @@ func (uc *userController) ChangeAvatar() func(ctx *gin.Context) {
 		avatarReq.AvatarUrl = avatarUrl
 
 		if err := uc.userUC.ChangeAvatar(ctx, int64(userID), &avatarReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -73,7 +73,7 @@ func (uc *userController) UpdateProfile() func(ctx *gin.Context) {
 		}
 
 		if err := uc.userUC.UpdateProfile(ctx, int64(userID), &profileReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 

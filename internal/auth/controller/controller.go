@@ -34,7 +34,7 @@ func (c *authController) Register() func(ctx *gin.Context) {
 		}
 
 		if err := c.authUC.Register(ctx, &userReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -53,7 +53,7 @@ func (c *authController) Login() func(ctx *gin.Context) {
 
 		userLoginResp, err := c.authUC.Login(ctx, &loginReq)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
