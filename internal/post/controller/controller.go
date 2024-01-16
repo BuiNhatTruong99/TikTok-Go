@@ -49,7 +49,7 @@ func (p *postController) CreatePost() func(ctx *gin.Context) {
 		postReq.VideoUrl = videoUrl
 
 		if err := p.postUC.CreatePost(ctx, &postReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -61,7 +61,7 @@ func (p *postController) GetAllPosts() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		posts, err := p.postUC.GetAllPost(ctx)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -79,7 +79,7 @@ func (p *postController) GetPostsByUserID() func(ctx *gin.Context) {
 
 		posts, err := p.postUC.GetPostsByUserID(ctx, int64(userID))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -108,7 +108,7 @@ func (p *postController) DeletePost() func(ctx *gin.Context) {
 		}
 
 		if err := p.postUC.DeletePost(ctx, int64(postID)); err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 

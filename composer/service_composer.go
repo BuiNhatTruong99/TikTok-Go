@@ -5,6 +5,9 @@ import (
 	authController "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/controller"
 	authPGRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/repository"
 	authPGUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/auth/usecase"
+	commentController "github.com/BuiNhatTruong99/TikTok-Go/internal/comment/controller"
+	commentRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/comment/repository"
+	commentUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/comment/usecase"
 	likeController "github.com/BuiNhatTruong99/TikTok-Go/internal/like/controller"
 	likeRepository "github.com/BuiNhatTruong99/TikTok-Go/internal/like/repository"
 	likeUsecase "github.com/BuiNhatTruong99/TikTok-Go/internal/like/usecase"
@@ -47,6 +50,11 @@ type LikeService interface {
 	UndoLikePost() func(ctx *gin.Context)
 }
 
+type CommentService interface {
+	CommentPost() func(ctx *gin.Context)
+	DeleteComment() func(ctx *gin.Context)
+}
+
 func ComposeAuthAPIService(db *gorm.DB, cfg *config.Config) AuthService {
 	authRepo := authPGRepository.NewAuthRepository(db)
 	authUC := authPGUsecase.NewAuthUsecase(authRepo, cfg)
@@ -87,4 +95,14 @@ func ComposeLikeAPIService(db *gorm.DB) LikeService {
 	likeUC := likeUsecase.NewLikeUsecase(likeRepo, userRepo)
 	likeAPIService := likeController.NewLikeController(likeUC)
 	return likeAPIService
+}
+
+func ComposeCommentAPISerivce(db *gorm.DB) CommentService {
+	commentRepo := commentRepository.NewCommentRepository(db)
+	userRepo := userRepository.NewUserRepo(db)
+
+	commentUC := commentUsecase.NewCommentUsecase(commentRepo, userRepo)
+	commentAPIService := commentController.NewCommentController(commentUC)
+
+	return commentAPIService
 }

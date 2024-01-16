@@ -27,7 +27,7 @@ func (lc *likeController) LikePost() func(ctx *gin.Context) {
 
 		likeRes, err := lc.likeUC.LikePost(ctx, &likeReq)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 
@@ -46,7 +46,7 @@ func (lc *likeController) UndoLikePost() func(ctx *gin.Context) {
 
 		err := lc.likeUC.UndoLikePost(ctx, &likeReq)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, httpResponse.ErrorResponse{Message: err.Error()})
+			ctx.JSON(http.StatusInternalServerError, httpResponse.ErrorResponse{Message: err.Error()})
 			return
 		}
 

@@ -38,6 +38,7 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	postAPIService := composer.ComposePostAPIService(db, cfg)
 	userAPIService := composer.ComposeUserAPIService(db, cfg)
 	likeAPIService := composer.ComposeLikeAPIService(db)
+	commentAPIService := composer.ComposeCommentAPISerivce(db)
 
 	auth := router.Group("/auth")
 	{
@@ -66,5 +67,11 @@ func SetupRoutes(router *gin.RouterGroup, db *gorm.DB, cfg *config.Config) {
 	{
 		like.POST("/create", likeAPIService.LikePost())
 		like.DELETE("/delete", likeAPIService.UndoLikePost())
+	}
+
+	comment := router.Group("/comment").Use(middleware.RequireAuth(cfg))
+	{
+		comment.POST("/create", commentAPIService.CommentPost())
+		comment.DELETE("/delete", commentAPIService.DeleteComment())
 	}
 }
